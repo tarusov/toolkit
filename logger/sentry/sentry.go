@@ -163,9 +163,11 @@ func (sn *SentryNotifier) getErrMessage(extra logger.Fields) (field string, msg 
 func (sn *SentryNotifier) getStacktrace(msg string) *sentry.Stacktrace {
 
 	var stacktrace = sentry.ExtractStacktrace(errors.New(msg))
+
 	if stacktrace == nil {
 		stacktrace = sentry.NewStacktrace()
 	}
+
 	if stacktrace == nil {
 		return nil
 	}
