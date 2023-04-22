@@ -19,6 +19,13 @@ const (
 	FormatText    Format = "text"
 )
 
+// map of formats.
+var formats = map[Format]struct{}{
+	FormatConsole: {},
+	FormatJSON:    {},
+	FormatText:    {},
+}
+
 // Level is logging severnity level.
 type Level string
 
@@ -30,6 +37,21 @@ const (
 	LevelError Level = "error"
 	LevelFatal Level = "fatal"
 )
+
+// map of levels.
+var levels = map[Level]zerolog.Level{
+	LevelDebug: zerolog.DebugLevel,
+	LevelInfo:  zerolog.InfoLevel,
+	LevelWarn:  zerolog.WarnLevel,
+	LevelError: zerolog.ErrorLevel,
+	LevelFatal: zerolog.FatalLevel,
+}
+
+// supportColors is map of output with color support.
+var supportColors = map[*os.File]struct{}{
+	os.Stdout: {},
+	os.Stderr: {},
+}
 
 type (
 	// Logger struct
@@ -54,39 +76,39 @@ func New(opts ...option) *Logger {
 		opt(p)
 	}
 
-	if p.format != FormatConsole &&
-		p.format != FormatJSON &&
-		p.format != FormatText {
-		var tmp = zerolog.New(os.Stderr).Level(zerolog.ErrorLevel).With().Logger()
-		tmp.Error().Msgf("unknown format %q. json format is set", p.format)
+	if _, ok := formats[p.format]; !ok {
+		printWarn("unknown format '%s'. json format is set", p.format)
 		p.format = FormatJSON
 	}
 
-	var lvl, err = zerolog.ParseLevel(string(p.level))
-	if err != nil {
-		var tmp = zerolog.New(os.Stderr).Level(zerolog.ErrorLevel).With().Logger()
-		tmp.Error().Msgf("unknown logging level %q. debug level is set", p.level)
+	var lvl, ok = levels[p.level]
+	if !ok {
+		printWarn("unknown logging level '%s'. debug level is set", p.level)
 		lvl = zerolog.DebugLevel
 	}
 
-	if p.tsFieldName == "" && p.tsEnabled {
-		var tmp = zerolog.New(os.Stderr).Level(zerolog.ErrorLevel).With().Logger()
-		tmp.Error().Msg("timestamp name is empty. default value is set")
+	if p.tsEnabled && p.tsFieldName == "" {
+		printWarn("timestamp name is empty. 'time' value is set")
 		p.tsFieldName = "time"
 	}
 
-	if p.tsFormat == "" && p.tsEnabled {
-		var tmp = zerolog.New(os.Stderr).Level(zerolog.ErrorLevel).With().Logger()
-		tmp.Error().Msg("time format is empty. rfc3339 is set")
+	if p.tsEnabled && p.tsFormat == "" {
+		printWarn("time format is empty. time.RFC3339 is set")
 		p.tsFormat = time.RFC3339
 	}
 
 	if p.format != FormatJSON {
 		for i, out := range p.outputs {
-			if _, ok := out.(*os.File); ok {
+			if v, ok := out.(*os.File); ok {
+
+				var colorful = false
+				if p.format == FormatConsole {
+					_, colorful = supportColors[v]
+				}
+
 				p.outputs[i] = zerolog.ConsoleWriter{
 					Out:        out,
-					NoColor:    (p.format == FormatText),
+					NoColor:    !colorful,
 					TimeFormat: p.tsFormat,
 				}
 			}
@@ -108,6 +130,12 @@ func New(opts ...option) *Logger {
 	return &Logger{
 		Logger: zl,
 	}
+}
+
+// printError write warning while logger create.
+func printWarn(format string, args ...any) {
+	var tmp = zerolog.New(os.Stderr).Level(zerolog.WarnLevel).With().Logger()
+	tmp.Warn().Msgf(format, args...)
 }
 
 // Debug

@@ -5,6 +5,15 @@ type (
 	Fields map[string]any
 )
 
+// WithError - create copy of logger with error field if err != nil
+func (l *Logger) WithError(err error) *Logger {
+	if err == nil {
+		return l
+	}
+	var zl = l.Logger.With().Err(err).Logger()
+	return &Logger{Logger: zl}
+}
+
 // WithField - create a copy of logger with target field.
 func (l *Logger) WithField(name string, value any) *Logger {
 	var k, v = kv(name, value)

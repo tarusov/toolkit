@@ -19,3 +19,6 @@
 
 # Go workspace file
 go.work
+
+# tmp logger file
+dear_diary.log
