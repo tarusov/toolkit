@@ -68,7 +68,7 @@ func TestLoggerLevel(t *testing.T) {
 	for _, c := range tc {
 		t.Run(c.Name, func(t *testing.T) {
 
-			buf := bytes.NewBuffer(make([]byte, 0, 256))
+			buf := bytes.NewBuffer(nil)
 
 			l := logger.New(
 				logger.WithOutput(buf),
@@ -94,7 +94,7 @@ func TestLoggerLevel(t *testing.T) {
 			// TODO: remove
 			fmt.Println(buf.String())
 
-			if c.Output != "" && !strings.Contains(c.Output, buf.String()) {
+			if c.Output != "" && !strings.Contains(buf.String(), c.Output) {
 				t.Errorf("%s: unexpected logging behaviour", c.Name)
 			}
 
