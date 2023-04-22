@@ -19,13 +19,6 @@ const (
 	FormatText    Format = "text"
 )
 
-// map of formats.
-var formats = map[Format]struct{}{
-	FormatConsole: {},
-	FormatJSON:    {},
-	FormatText:    {},
-}
-
 // Level is logging severnity level.
 type Level string
 
@@ -38,21 +31,6 @@ const (
 	LevelFatal Level = "fatal"
 )
 
-// map of levels.
-var levels = map[Level]zerolog.Level{
-	LevelDebug: zerolog.DebugLevel,
-	LevelInfo:  zerolog.InfoLevel,
-	LevelWarn:  zerolog.WarnLevel,
-	LevelError: zerolog.ErrorLevel,
-	LevelFatal: zerolog.FatalLevel,
-}
-
-// supportColors is map of output with color support.
-var supportColors = map[*os.File]struct{}{
-	os.Stdout: {},
-	os.Stderr: {},
-}
-
 type (
 	// Logger struct
 	Logger struct {
@@ -62,6 +40,28 @@ type (
 
 // New create new logger instance.
 func New(opts ...option) *Logger {
+
+	// map of avaliable formats.
+	var formats = map[Format]struct{}{
+		FormatConsole: {},
+		FormatJSON:    {},
+		FormatText:    {},
+	}
+
+	// map of  avaliable levels.
+	var levels = map[Level]zerolog.Level{
+		LevelDebug: zerolog.DebugLevel,
+		LevelInfo:  zerolog.InfoLevel,
+		LevelWarn:  zerolog.WarnLevel,
+		LevelError: zerolog.ErrorLevel,
+		LevelFatal: zerolog.FatalLevel,
+	}
+
+	// supportColors is map of output with color support.
+	var supportColors = map[*os.File]struct{}{
+		os.Stdout: {},
+		os.Stderr: {},
+	}
 
 	var p = &params{
 		outputs:     []io.Writer{os.Stderr},

@@ -14,7 +14,7 @@ func TestLoggerFields(t *testing.T) {
 
 	var l = logger.New(
 		logger.WithOutput(buf),
-		logger.WithTimestampEnabled(false),
+		logger.WithTimeStampEnabled(false),
 	)
 
 	l = l.WithFields(logger.Fields{
@@ -37,7 +37,7 @@ func TestSkipNilErr(t *testing.T) {
 
 	var l = logger.New(
 		logger.WithOutput(buf),
-		logger.WithTimestampEnabled(false),
+		logger.WithTimeStampEnabled(false),
 	)
 
 	l = l.WithError(nil)

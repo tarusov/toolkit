@@ -39,21 +39,21 @@ func WithLevel(l Level) option {
 }
 
 // WithTimestampEnabled setup ts including. Default is true.
-func WithTimestampEnabled(e bool) option {
+func WithTimeStampEnabled(e bool) option {
 	return func(p *params) {
 		p.tsEnabled = e
 	}
 }
 
-// WithTimestampFormat setup format for timestamp. Default is RFC3339.
-func WithTimestampFormat(f string) option {
+// WithTimeStampFormat setup format for timestamp. Default is RFC3339.
+func WithTimeStampFormat(f string) option {
 	return func(p *params) {
 		p.tsFormat = f
 	}
 }
 
-// WithTimestampName setup timestamp field name. Default is "time".
-func WithTimestampName(n string) option {
+// WithTimeStampName setup timestamp field name. Default is "time".
+func WithTimeStampName(n string) option {
 	return func(p *params) {
 		p.tsFieldName = n
 	}

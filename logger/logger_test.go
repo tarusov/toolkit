@@ -25,7 +25,7 @@ func TestLoggerIvalidFormatAndLevel(t *testing.T) {
 		logger.WithOutput(buf),
 		logger.WithFormat(logger.Format("everything")),
 		logger.WithLevel(logger.Level("everything")),
-		logger.WithTimestampEnabled(false),
+		logger.WithTimeStampEnabled(false),
 	)
 
 	l.Debug(MessageText)
@@ -41,9 +41,9 @@ func TestLoggerIvalidTimestampParams(t *testing.T) {
 
 	var l = logger.New(
 		logger.WithOutput(buf),
-		logger.WithTimestampEnabled(true),
-		logger.WithTimestampFormat(""),
-		logger.WithTimestampName(""),
+		logger.WithTimeStampEnabled(true),
+		logger.WithTimeStampFormat(""),
+		logger.WithTimeStampName(""),
 	)
 
 	l.Info(MessageText)
@@ -116,7 +116,7 @@ func TestLoggerLevel(t *testing.T) {
 				logger.WithOutput(buf),
 				logger.WithFormat(c.Format),
 				logger.WithLevel(c.LoggerLevel),
-				logger.WithTimestampEnabled(false),
+				logger.WithTimeStampEnabled(false),
 			)
 
 			switch c.MessageLevel {
@@ -210,7 +210,7 @@ func TestLoggerDebugf(t *testing.T) {
 				logger.WithOutput(buf),
 				logger.WithFormat(c.Format),
 				logger.WithLevel(c.LoggerLevel),
-				logger.WithTimestampEnabled(false),
+				logger.WithTimeStampEnabled(false),
 			)
 
 			switch c.MessageLevel {
