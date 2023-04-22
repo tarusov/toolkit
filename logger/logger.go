@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"time"
@@ -44,6 +45,7 @@ func New(opts ...option) *Logger {
 		outputs:     []io.Writer{os.Stderr},
 		format:      FormatJSON,
 		level:       LevelInfo,
+		tsEnabled:   true,
 		tsFieldName: "time",
 		tsFormat:    time.RFC3339,
 	}
@@ -75,10 +77,64 @@ func New(opts ...option) *Logger {
 
 	var (
 		wr = zerolog.MultiLevelWriter(p.outputs...)
-		zl = zerolog.New(wr).With().Timestamp().Logger().Level(lvl)
+		zl = zerolog.New(wr).Level(lvl)
 	)
+
+	if p.tsEnabled {
+		zl = zl.With().Timestamp().Logger()
+	}
 
 	return &Logger{
 		Logger: zl,
 	}
+}
+
+// Debug
+func (l *Logger) Debug(msg string) {
+	l.Logger.Debug().Msg(msg)
+}
+
+// Info
+func (l *Logger) Info(msg string) {
+	l.Logger.Info().Msg(msg)
+}
+
+// Warn
+func (l *Logger) Warn(msg string) {
+	l.Logger.Warn().Msg(msg)
+}
+
+// Error
+func (l *Logger) Error(msg string) {
+	l.Logger.Error().Msg(msg)
+}
+
+// Fatal
+func (l *Logger) Fatal(msg string) {
+	l.Logger.Fatal().Msg(msg)
+}
+
+// Debugf
+func (l *Logger) Debugf(format string, args ...any) {
+	l.Logger.Debug().Msg(fmt.Sprintf(format, args...))
+}
+
+// Info
+func (l *Logger) Infof(format string, args ...any) {
+	l.Logger.Info().Msg(fmt.Sprintf(format, args...))
+}
+
+// Warn
+func (l *Logger) Warnf(format string, args ...any) {
+	l.Logger.Warn().Msg(fmt.Sprintf(format, args...))
+}
+
+// Error
+func (l *Logger) Errorf(format string, args ...any) {
+	l.Logger.Error().Msg(fmt.Sprintf(format, args...))
+}
+
+// Fatal
+func (l *Logger) Fatalf(format string, args ...any) {
+	l.Logger.Fatal().Msg(fmt.Sprintf(format, args...))
 }

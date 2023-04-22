@@ -11,6 +11,7 @@ type (
 		outputs     []io.Writer
 		format      Format
 		level       Level
+		tsEnabled   bool
 		tsFieldName string // timestamp field name
 		tsFormat    string // time format
 	}
@@ -34,6 +35,13 @@ func WithFormat(f Format) option {
 func WithLevel(l Level) option {
 	return func(p *params) {
 		p.level = l
+	}
+}
+
+// WithTimestampEnabled setup ts including. Default is true.
+func WithTimestampEnabled(e bool) option {
+	return func(p *params) {
+		p.tsEnabled = e
 	}
 }
 
