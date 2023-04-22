@@ -23,6 +23,15 @@ type (
 	}
 )
 
+// mapping zerolog to sentry levels.
+var zerologToSentryLevels = map[zerolog.Level]sentry.Level{
+	zerolog.DebugLevel: sentry.LevelDebug,
+	zerolog.InfoLevel:  sentry.LevelInfo,
+	zerolog.WarnLevel:  sentry.LevelWarning,
+	zerolog.ErrorLevel: sentry.LevelError,
+	zerolog.FatalLevel: sentry.LevelFatal,
+}
+
 // New create new sentry notifier entry.
 func New(dsn string, opts ...option) (*SentryNotifier, error) {
 
@@ -42,7 +51,7 @@ func New(dsn string, opts ...option) (*SentryNotifier, error) {
 	var p = &params{
 		level:      logger.LevelError,
 		timeout:    time.Second * 5,
-		stackTrace: false,
+		stackTrace: true,
 	}
 
 	for _, opt := range opts {
@@ -126,7 +135,7 @@ func (sn *SentryNotifier) capture(msg string, level zerolog.Level, extra logger.
 	}
 
 	e.Message = msg
-	e.Level = sentry.Level(level.String())
+	e.Level = zerologToSentryLevels[level]
 	e.Timestamp = time.Now()
 	e.Exception = []sentry.Exception{{
 		Value:      msg,

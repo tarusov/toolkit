@@ -6,7 +6,7 @@ type (
 	// option is ctor modificator func.
 	option func(*params)
 
-	// params is ctor parameters.
+	// params is logger ctor parameters.
 	params struct {
 		outputs     []io.Writer
 		format      Format

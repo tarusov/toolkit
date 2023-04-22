@@ -7,6 +7,7 @@ import (
 )
 
 type (
+	// params is sentry ctor parameters.
 	params struct {
 		level      logger.Level
 		timeout    time.Duration
@@ -25,6 +26,13 @@ type (
 func WithTimeout(t time.Duration) option {
 	return func(p *params) {
 		p.timeout = t
+	}
+}
+
+// WithLevel setup sentry severnity level. Default is error.
+func WithLevel(l logger.Level) option {
+	return func(p *params) {
+		p.level = l
 	}
 }
 
@@ -56,7 +64,7 @@ func WithRelease(release string) option {
 	}
 }
 
-// WithStackTraceEnabled setup stacktrace logging. Default is false.
+// WithStackTraceEnabled setup stacktrace logging. Default is true.
 func WithStackTraceEnabled(e bool) option {
 	return func(p *params) {
 		p.stackTrace = e
