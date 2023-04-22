@@ -132,7 +132,7 @@ func New(opts ...option) *Logger {
 	}
 }
 
-// printError write warning while logger create.
+// printWarn write warning while logger create.
 func printWarn(format string, args ...any) {
 	var tmp = zerolog.New(os.Stderr).Level(zerolog.WarnLevel).With().Logger()
 	tmp.Warn().Msgf(format, args...)

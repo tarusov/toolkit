@@ -34,6 +34,7 @@ func (l *Logger) WithFields(fields Fields) *Logger {
 // kv check key-value pair.
 func kv(k string, v any) (string, any) {
 	if k == "" {
+		printWarn("empty field name passed")
 		k = "unknown_field"
 	}
 	return k, v
