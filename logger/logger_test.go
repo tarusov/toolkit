@@ -9,9 +9,45 @@ import (
 	"github.com/tarusov/toolkit/logger"
 )
 
-func TestLoggerLevel(t *testing.T) {
+const MessageText = "message"
 
-	const MessageText = "message"
+func TestLoggerIvalidFormatAndLevel(t *testing.T) {
+
+	var buf = bytes.NewBuffer(nil)
+
+	var l = logger.New(
+		logger.WithOutput(buf),
+		logger.WithFormat(logger.Format("everything")),
+		logger.WithLevel(logger.Level("everything")),
+		logger.WithTimestampEnabled(false),
+	)
+
+	l.Debug(MessageText)
+
+	if buf.String() != `{"level":"debug","message":"message"}`+"\n" {
+		t.Errorf("invalid_logger_level: unexpected logging behaviour")
+	}
+}
+
+func TestLoggerIvalidTimestampParams(t *testing.T) {
+
+	var buf = bytes.NewBuffer(nil)
+
+	var l = logger.New(
+		logger.WithOutput(buf),
+		logger.WithTimestampEnabled(true),
+		logger.WithTimestampFormat(""),
+		logger.WithTimestampName(""),
+	)
+
+	l.Info(MessageText)
+
+	if !strings.Contains(buf.String(), "time") {
+		t.Errorf("invalid_timestamp_name: unexpected logging behaviour")
+	}
+}
+
+func TestLoggerLevel(t *testing.T) {
 
 	tc := []struct {
 		Name         string
@@ -92,12 +128,15 @@ func TestLoggerLevel(t *testing.T) {
 			}
 
 			// TODO: remove
-			fmt.Println(buf.String())
+			fmt.Print(buf.String())
 
-			if c.Output != "" && !strings.Contains(buf.String(), c.Output) {
-				t.Errorf("%s: unexpected logging behaviour", c.Name)
+			if c.Output != "" {
+				c.Output += "\n"
 			}
 
+			if buf.String() != c.Output {
+				t.Errorf("%s: unexpected logging behaviour", c.Name)
+			}
 		})
 	}
 }

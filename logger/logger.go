@@ -54,10 +54,31 @@ func New(opts ...option) *Logger {
 		opt(p)
 	}
 
+	if p.format != FormatConsole &&
+		p.format != FormatJSON &&
+		p.format != FormatText {
+		var tmp = zerolog.New(os.Stderr).Level(zerolog.ErrorLevel).With().Logger()
+		tmp.Error().Msgf("unknown format %q. json format is set", p.format)
+		p.format = FormatJSON
+	}
+
 	var lvl, err = zerolog.ParseLevel(string(p.level))
 	if err != nil {
-		// TODO: Add message
+		var tmp = zerolog.New(os.Stderr).Level(zerolog.ErrorLevel).With().Logger()
+		tmp.Error().Msgf("unknown logging level %q. debug level is set", p.level)
 		lvl = zerolog.DebugLevel
+	}
+
+	if p.tsFieldName == "" && p.tsEnabled {
+		var tmp = zerolog.New(os.Stderr).Level(zerolog.ErrorLevel).With().Logger()
+		tmp.Error().Msg("timestamp name is empty. default value is set")
+		p.tsFieldName = "time"
+	}
+
+	if p.tsFormat == "" && p.tsEnabled {
+		var tmp = zerolog.New(os.Stderr).Level(zerolog.ErrorLevel).With().Logger()
+		tmp.Error().Msg("time format is empty. rfc3339 is set")
+		p.tsFormat = time.RFC3339
 	}
 
 	if p.format != FormatJSON {
