@@ -9,8 +9,10 @@ import (
 type (
 	// options is list of settings for sentry ctor.
 	options struct {
-		level   logger.Level
-		timeout time.Duration
+		environment string
+		release     string
+		level       logger.Level
+		timeout     time.Duration
 	}
 
 	// option if type of modifing func for ctor.
@@ -20,8 +22,26 @@ type (
 // getDefaultOptions return default settings for logger.
 func getDefaultOptions() *options {
 	return &options{
-		level:   logger.LevelError,
-		timeout: time.Second * 3,
+		environment: "staging",
+		release:     "1",
+		level:       logger.LevelError,
+		timeout:     time.Second * 3,
+	}
+}
+
+// WithEnvironment setup target env name.
+// Default is "staging".
+func WithEnvironment(e string) option {
+	return func(o *options) {
+		o.environment = e
+	}
+}
+
+// WithRelease setup target release version.
+// Default is "1".
+func WithRelease(r string) option {
+	return func(o *options) {
+		o.release = r
 	}
 }
 
