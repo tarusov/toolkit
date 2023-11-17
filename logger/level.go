@@ -31,6 +31,6 @@ func GetZerologLevel(l Level) zerolog.Level {
 	case LevelPanic:
 		return zerolog.PanicLevel
 	default:
-		return zerolog.NoLevel
+		return zerolog.DebugLevel
 	}
 }

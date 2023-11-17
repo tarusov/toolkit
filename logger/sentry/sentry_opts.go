@@ -9,9 +9,10 @@ import (
 type (
 	// options is list of settings for sentry ctor.
 	options struct {
+		level       logger.Level
+		stacktrace  bool
 		environment string
 		release     string
-		level       logger.Level
 		timeout     time.Duration
 	}
 
@@ -22,9 +23,9 @@ type (
 // getDefaultOptions return default settings for logger.
 func getDefaultOptions() *options {
 	return &options{
+		level:       logger.LevelError,
 		environment: "staging",
 		release:     "1",
-		level:       logger.LevelError,
 		timeout:     time.Second * 3,
 	}
 }

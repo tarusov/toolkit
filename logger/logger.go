@@ -15,7 +15,7 @@ type (
 )
 
 // New - create new logger instance.
-func New(opts ...option) *Logger {
+func New(opts ...Option) *Logger {
 
 	// Get default ctor options & modify it.
 	var options = getDefaultOptions()

@@ -11,12 +11,12 @@ import (
 type (
 	// SentryNotifier
 	SentryNotifier struct {
-		hub   *sentry.Hub
-		level zerolog.Level
+		client *sentry.Client
+		level  zerolog.Level
 	}
 )
 
-// New create new sentry notifier.
+// New create new sentry notifier instance.
 func New(dsn string, opts ...option) (*SentryNotifier, error) {
 
 	// Get default ctor options & modify it.
@@ -25,16 +25,18 @@ func New(dsn string, opts ...option) (*SentryNotifier, error) {
 		set(options)
 	}
 
-	client, err := sentry.NewClient(sentry.ClientOptions{})
+	client, err := sentry.NewClient(sentry.ClientOptions{
+		Dsn:              dsn,
+		Debug:            options.level == logger.LevelDebug,
+		AttachStacktrace: options.stacktrace,
+	})
 	if err != nil {
 		return nil, fmt.Errorf("new sentry client: %w", err)
 	}
 
-	hub := sentry.NewHub(client, sentry.NewScope())
-
 	return &SentryNotifier{
-		level: logger.GetZerologLevel(options.level),
-		hub:   hub,
+		client: client,
+		level:  logger.GetZerologLevel(options.level),
 	}, nil
 }
 

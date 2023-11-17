@@ -18,8 +18,8 @@ type (
 		tsName   string
 	}
 
-	// option if type of modifing func for ctor.
-	option func(*options)
+	// Option if type of modifing func for ctor.
+	Option func(*options)
 )
 
 // getDefaultOptions return default settings for logger.
@@ -35,7 +35,7 @@ func getDefaultOptions() *options {
 
 // WithFormat option setup logging output format.
 // Default format is "json"
-func WithFormat(f Format) option {
+func WithFormat(f Format) Option {
 	return func(o *options) {
 		o.format = f
 	}
@@ -43,7 +43,7 @@ func WithFormat(f Format) option {
 
 // WithLevel option setup custom logging level.
 // Default level is "info".
-func WithLevel(l Level) option {
+func WithLevel(l Level) Option {
 	return func(o *options) {
 		o.level = l
 	}
@@ -51,7 +51,7 @@ func WithLevel(l Level) option {
 
 // WithOutput option setup custom output target.
 // Default is os.Stderr.
-func WithOutput(w ...io.Writer) option {
+func WithOutput(w ...io.Writer) Option {
 	return func(o *options) {
 		o.output = w
 	}
@@ -59,7 +59,7 @@ func WithOutput(w ...io.Writer) option {
 
 // WithTimestampFormat option setup custom timestamp format.
 // Default is time.RFC3339
-func WithTimestampFormat(f string) option {
+func WithTimestampFormat(f string) Option {
 	return func(o *options) {
 		o.tsFormat = f
 	}
@@ -67,7 +67,7 @@ func WithTimestampFormat(f string) option {
 
 // WithTimestampName option setup custom timestamp name.
 // Default is "time".
-func WithTimestampName(n string) option {
+func WithTimestampName(n string) Option {
 	return func(o *options) {
 		o.tsName = n
 	}
